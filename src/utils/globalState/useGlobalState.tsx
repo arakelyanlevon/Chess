@@ -1,13 +1,13 @@
-import React, { createContext, useContext } from "react";
+import { createContext, useContext, Dispatch } from 'react';
 import { StateType } from './initialState';
 import { Actions } from './actions';
 
-interface IContextProps {
+export type ContextProps = {
     state: StateType;
-    dispatch: React.Dispatch<Actions>;
+    dispatch: Dispatch<Actions>;
 }
 
-export const Context = createContext({} as IContextProps);
+export const Context = createContext({} as ContextProps);
 
 export const useGlobalState = () => {
     return useContext(Context);

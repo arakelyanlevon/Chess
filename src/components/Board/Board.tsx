@@ -47,13 +47,14 @@ export const Board:FC = () => {
 
     return (
         <Main>
-            {Array.from(Array(constants.cell.count).keys()).map((_, i: number) => (
-                <Row key={i}>
-                    {Array.from(Array(constants.cell.count).keys()).map((_, j: number) => (
+            {Array.from(Array(constants.cell.count).keys()).map((_, j: number) => (
+                <Row key={j}>
+                    {Array.from(Array(constants.cell.count).keys()).map((_, i: number) => (
                         <Cell
                             key={`${i} ${j}`}
                             isWhite={(i + j) % 2 === 0}
-                            figure={getFigureById(j, i)}
+                            figure={getFigureById(i, j)}
+                            coords={{ i, j }}
                         />
                     ))}
                 </Row>

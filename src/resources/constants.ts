@@ -4,20 +4,20 @@ const constants = {
     },
     figures: {
         white: {
-            pawn: 'whitePawn',
-            rook: 'whiteRook',
-            knight: 'whiteKnight',
-            bishop: 'whiteBishop',
-            queen: 'whiteQueen',
-            king: 'whiteKing'
+            pawn: 'white_pawn',
+            rook: 'white_rook',
+            knight: 'white_knight',
+            bishop: 'white_bishop',
+            queen: 'white_queen',
+            king: 'white_king'
         },
         black: {
-            pawn: 'blackPawn',
-            rook: 'blackRook',
-            knight: 'blackKnight',
-            bishop: 'blackBishop',
-            queen: 'blackQueen',
-            king: 'blackKing'
+            pawn: 'black_pawn',
+            rook: 'black_rook',
+            knight: 'black_knight',
+            bishop: 'black_bishop',
+            queen: 'black_queen',
+            king: 'black_king'
         },
         none: 'none'
     }
