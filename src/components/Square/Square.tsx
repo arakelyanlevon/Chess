@@ -52,7 +52,6 @@ const Main = styled.div`
 `;
 
 const FigureImg = styled.img`
-    position: absolute;
     z-index: 0;
 `;
 
@@ -78,7 +77,8 @@ export const Square:FC<Props> = ({ isWhite, figure, coords }) => {
     }
 
     const setFigure = () => {
-        if(selectedCell) {
+        const clickedSameSquare = selectedCell?.coords.i === coords.i && selectedCell?.coords.j === coords.j;
+        if( selectedCell && (isPossible || clickedSameSquare)) {
             const foundIndex: number | null = helpers.getCellIndex(coords, state.allCells);
             dispatch({
                 type: ActionTypes.SET_FIGURE,

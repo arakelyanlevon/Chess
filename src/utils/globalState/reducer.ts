@@ -29,7 +29,6 @@ const reducer = (state: StateType, action: Actions): StateType => {
 
             if(
                 !action.figure ||
-                action.newIndex === action.oldIndex ||
                 action.newIndex === -1 ||
                 action.oldIndex === -1
             ) {

@@ -24,7 +24,16 @@ export const setHeight = (): number => {
 };
 
 export const setPossible = (state: StateType, coords: Coords): boolean => {
+    const currentCell = state.allCells.find((cell: Cell) => {
+        return cell.coords.i === coords.i && cell.coords.j === coords.j
+    });
+
+    if(currentCell?.figure) {
+        return false;
+    };
+
     const selectedCell = getSelectedCell(state);
+
     if(
         (!selectedCell) ||
         (coords.j === selectedCell?.coords?.j && coords.i === selectedCell?.coords?.i) ||
