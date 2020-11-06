@@ -3,7 +3,10 @@ import styled from 'styled-components';
 
 import styles from '../../resources/styles';
 import constants from '../../resources/constants';
-import { Cell } from '../Cell/Cell';
+import { Square } from '../Square/Square';
+import { useGlobalState } from '../../utils/globalState/useGlobalState';
+import { Cell } from '../../utils/types';
+import { createArray } from '../../utils/helpers';
 
 const Main = styled.div`
     width: ${styles.cell.width * constants.cell.count}px;
@@ -17,46 +20,26 @@ const Row = styled.div`
 `;
 
 export const Board:FC = () => {
-    const getFigureById = (i: number, j: number): string => {
-        if(i === 0 && (j === 0 || j === constants.cell.count - 1))
-            return constants.figures.black.rook;
-        else if(i === 0 && (j === 1 || j === constants.cell.count - 2))
-            return constants.figures.black.knight;
-        else if(i === 0 && (j === 2 || j === constants.cell.count - 3))
-            return constants.figures.black.bishop;
-        else if(i === 0 && j === 3 )
-            return constants.figures.black.queen;
-        else if(i === 0 && j === 4 )
-            return constants.figures.black.king;
-        else if(i === 1)
-            return constants.figures.black.pawn;
-        else if(i === constants.cell.count - 2)
-            return constants.figures.white.pawn;
-        else if(i === constants.cell.count - 1 && j === 3 )
-            return constants.figures.white.queen;
-        else if(i === constants.cell.count - 1 && j === 4 )
-            return constants.figures.white.king;
-        else if(i === constants.cell.count - 1 && (j === 0 || j === constants.cell.count - 1))
-            return constants.figures.white.rook;
-        else if(i === constants.cell.count - 1 && (j === 1 || j === constants.cell.count - 2))
-            return constants.figures.white.knight;
-        else if(i === constants.cell.count - 1 && (j === 2 || j === constants.cell.count - 3))
-            return constants.figures.white.bishop;
-        return constants.figures.none;
-    };
-
+    const { state } = useGlobalState();
+    
     return (
         <Main>
-            {Array.from(Array(constants.cell.count).keys()).map((_, j: number) => (
+            {createArray(8).map((_, j: number) => (
                 <Row key={j}>
-                    {Array.from(Array(constants.cell.count).keys()).map((_, i: number) => (
-                        <Cell
+                    {createArray(8).map((_, i: number) => {
+                        const cell = state.allCells.find((cell: Cell) => cell.coords.i === i && cell.coords.j === j);
+                        return <Square
                             key={`${i} ${j}`}
                             isWhite={(i + j) % 2 === 0}
-                            figure={getFigureById(i, j)}
+                            figure={
+                                `${cell?.figure ?
+                                    `${cell.figure?.color}_${cell.figure?.type}` :
+                                    `${constants.figures.none}`
+                                }`
+                            }
                             coords={{ i, j }}
                         />
-                    ))}
+                    })}
                 </Row>
             ))}
         </Main>

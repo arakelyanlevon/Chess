@@ -18,13 +18,19 @@ export type Coords = {
 }
 
 export type Figure = {
-    coords: Coords,
     type: FigureTypes.rook
     | FigureTypes.knight
     | FigureTypes.bishop
     | FigureTypes.queen
     | FigureTypes.king
     | FigureTypes.pawn,
-    color: ColorTypes.black
-    | ColorTypes.white
+    color: ColorTypes.black | ColorTypes.white
+}
+
+export type Cell = {
+    coords: Coords,
+    color: ColorTypes.black | ColorTypes.white,
+    figure: Figure | null,
+    selected: boolean,
+    index: number
 }

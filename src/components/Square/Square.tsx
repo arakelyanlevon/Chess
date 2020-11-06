@@ -14,11 +14,12 @@ import whitePawn from '../../images/figures/white/whitePawn.png';
 import whiteQueen from '../../images/figures/white/whiteQueen.png';
 import whiteRook from '../../images/figures/white/whiteRook.png';
 import constants from '../../resources/constants';
-import { ColorTypes, Coords } from '../../utils/types';
+import { ColorTypes, Coords, Cell } from '../../utils/types';
 import { ContextProps, useGlobalState }from '../../utils/globalState/useGlobalState';
 import { ActionTypes } from '../../utils/globalState/actions';
 import styles from '../../resources/styles';
 import * as helpers from './helpers';
+import { getSelectedCell } from '../../utils/helpers';
 
 const figures = {
     black_bishop: blackBishop,
@@ -36,7 +37,7 @@ const figures = {
 };
 
 
-export const Main = styled.div`
+const Main = styled.div`
     width: ${styles.cell.width}px;
     height: ${styles.cell.height}px;
     background-color: ${({theme}) => {
@@ -50,61 +51,57 @@ export const Main = styled.div`
     align-items: center;
 `;
 
+const FigureImg = styled.img`
+    position: absolute;
+    z-index: 0;
+`;
+
 type Props = {
     figure: string,
     isWhite: boolean,
     coords: Coords
 }
 
-export const Cell:FC<Props> = ({ isWhite, figure, coords }) => {
+export const Square:FC<Props> = ({ isWhite, figure, coords }) => {
     const { state, dispatch }: ContextProps = useGlobalState();
-    const [ isFigureSelected, setFigureSelected ] = useState<boolean>(false);
 
-    const currentFigureRef:RefObject<HTMLImageElement> = useRef<HTMLImageElement>(null);
     const color: string = figure.split('_')[0];
-    const type: string = figure.split('_')[1];
+
+    const selectedCell: Cell | undefined = getSelectedCell(state);
     const isPossible: boolean = helpers.setPossible(state, coords);
 
     const takeFigure = (): void => {
-        if(!isFigureSelected && !state.currentFigure && color !== ColorTypes.black) {
-            window.addEventListener('mousemove', moveFigure);
-            dispatch({type: ActionTypes.SET_FIGURE, figure: state.allFigures.find(figure => {
-                return (
-                    figure.type === type &&
-                    figure.color === color &&
-                    figure.coords.i === coords.i &&
-                    figure.coords.j === coords.j
-                );
-            }) || null});
+        if(color === ColorTypes.white) {
+            const foundIndex: number | null = helpers.getCellIndex(coords, state.allCells);
+            dispatch({ type: ActionTypes.SELECT_FIGURE, index: foundIndex || -1 });
         }
-        if(isFigureSelected){
-            window.removeEventListener('mousemove', moveFigure);
-            dispatch({type: ActionTypes.SET_FIGURE, figure: null})
-        }
-        setFigureSelected(!isFigureSelected);
     }
-    const moveFigure = useCallback((e: any) => {
-        if(currentFigureRef.current) {
-            currentFigureRef.current.style.top = e.clientY - currentFigureRef.current.height / 2 + 'px';
-            currentFigureRef.current.style.left = e.clientX - currentFigureRef.current.width / 2 + 'px';
+
+    const setFigure = () => {
+        if(selectedCell) {
+            const foundIndex: number | null = helpers.getCellIndex(coords, state.allCells);
+            dispatch({
+                type: ActionTypes.SET_FIGURE,
+                oldIndex: selectedCell?.index || -1,
+                newIndex: foundIndex || -1,
+                figure: selectedCell?.figure || null
+            });
         }
-    }, []);
-    
+    }
+
     return (
         <Main
-            theme={{isWhite, isPossible}}   
+            className='cell'
+            theme={{isWhite, isPossible}}
+            onClick={() => selectedCell ? setFigure() : takeFigure()}
         >
             {figure !== constants.figures.none && 
-            <img
+            <FigureImg
                 /* @ts-ignore */
                 src={figures[figure]}
                 alt={figure}
                 width={helpers.setWidth(figure)}
                 height={helpers.setHeight()}
-                style={{position: 'absolute'}}
-                onClick={takeFigure}
-                ref={currentFigureRef}
-                className={`${coords.i} ${coords.j}`}
             />}
         </Main>
     );

@@ -1,10 +1,12 @@
 import { Figure } from '../types'
 
 export enum ActionTypes {
-    SET_FIGURE = 'SET_FIGURE',
+    SELECT_FIGURE = 'SELECT_FIGURE',
+    SET_FIGURE = 'CHANGE_COORDS'
 }
 
 type Actions =
-| { type: ActionTypes.SET_FIGURE; figure: Figure | null }
+| { type: ActionTypes.SELECT_FIGURE; index: number }
+| { type: ActionTypes.SET_FIGURE; newIndex: number; oldIndex: number; figure: Figure | null }
 
 export type { Actions };
