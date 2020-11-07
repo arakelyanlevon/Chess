@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef, useCallback, RefObject } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import blackBishop from '../../images/figures/black/blackBishop.png';
@@ -13,13 +13,12 @@ import whiteKnight from '../../images/figures/white/whiteKnight.png';
 import whitePawn from '../../images/figures/white/whitePawn.png';
 import whiteQueen from '../../images/figures/white/whiteQueen.png';
 import whiteRook from '../../images/figures/white/whiteRook.png';
-import constants from '../../resources/constants';
-import { ColorTypes, Coords, Cell } from '../../utils/types';
+import { Coords, Cell, Figure } from '../../utils/types';
 import { ContextProps, useGlobalState }from '../../utils/globalState/useGlobalState';
 import { ActionTypes } from '../../utils/globalState/actions';
 import styles from '../../resources/styles';
 import * as helpers from './helpers';
-import { getSelectedCell } from '../../utils/helpers';
+import { getMyColor, isSameCoords } from '../../utils/helpers';
 
 const figures = {
     black_bishop: blackBishop,
@@ -56,36 +55,30 @@ const FigureImg = styled.img`
 `;
 
 type Props = {
-    figure: string,
     isWhite: boolean,
-    coords: Coords
+    coords: Coords,
+    figure: Figure | null
 }
 
-export const Square:FC<Props> = ({ isWhite, figure, coords }) => {
+export const Square:FC<Props> = ({ isWhite, figure, coords }: Props) => {
     const { state, dispatch }: ContextProps = useGlobalState();
 
-    const color: string = figure.split('_')[0];
-
-    const selectedCell: Cell | undefined = getSelectedCell(state);
-    const isPossible: boolean = helpers.setPossible(state, coords);
+    const isPossible: boolean = !!state.selectedCell?.figure?.control.find((controlCoords: Coords) => {
+        return isSameCoords(controlCoords, coords);
+    });
 
     const takeFigure = (): void => {
-        if(color === ColorTypes.white) {
-            const foundIndex: number | null = helpers.getCellIndex(coords, state.allCells);
-            dispatch({ type: ActionTypes.SELECT_FIGURE, index: foundIndex || -1 });
+        if(figure?.color === getMyColor()) {
+            const currentCell: Cell | null = helpers.getCellByCoords(coords, state.allCells);
+            dispatch({ type: ActionTypes.SELECT_FIGURE, cell: currentCell });
         }
     }
 
     const setFigure = () => {
-        const clickedSameSquare = selectedCell?.coords.i === coords.i && selectedCell?.coords.j === coords.j;
-        if( selectedCell && (isPossible || clickedSameSquare)) {
-            const foundIndex: number | null = helpers.getCellIndex(coords, state.allCells);
-            dispatch({
-                type: ActionTypes.SET_FIGURE,
-                oldIndex: selectedCell?.index || -1,
-                newIndex: foundIndex || -1,
-                figure: selectedCell?.figure || null
-            });
+        const cell: Cell | null = helpers.getCellByCoords(coords, state.allCells);
+        if(cell && state.selectedCell && isPossible) {
+            cell.figure = state.selectedCell.figure;
+            dispatch({ type: ActionTypes.SET_FIGURE, cell: cell })
         }
     }
 
@@ -93,16 +86,17 @@ export const Square:FC<Props> = ({ isWhite, figure, coords }) => {
         <Main
             className='cell'
             theme={{isWhite, isPossible}}
-            onClick={() => selectedCell ? setFigure() : takeFigure()}
+            onClick={() => state.selectedCell ? setFigure() : takeFigure()}
         >
-            {figure !== constants.figures.none && 
-            <FigureImg
-                /* @ts-ignore */
-                src={figures[figure]}
-                alt={figure}
-                width={helpers.setWidth(figure)}
-                height={helpers.setHeight()}
-            />}
+            {figure &&
+                <FigureImg
+                    /* @ts-ignore */
+                    src={figures[`${figure.color}_${figure.type}`]}
+                    alt={`${figure.color} ${figure.type}`}
+                    width={helpers.setWidth(figure.type)}
+                    height={helpers.setHeight()}
+                />
+            }
         </Main>
     );
 };

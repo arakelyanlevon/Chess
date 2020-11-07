@@ -1,9 +1,10 @@
-import { Figure, FigureTypes, ColorTypes, Cell } from '../types';
+import { ColorTypes, Cell } from '../types';
 import { createArray } from '../helpers'
 import { getFigure } from './helpers';
 
 type StateType = {
-    allCells: Cell[]
+    allCells: Cell[],
+    selectedCell: Cell | null
 }
 
 const initialState: StateType = {
@@ -13,11 +14,11 @@ const initialState: StateType = {
                 coords: { i, j },
                 color: (i + j) % 2 === 0 ? ColorTypes.white : ColorTypes.black,
                 figure: getFigure(i, j),
-                selected: false,
-                index: i * 8 + j
+                index: i * 8 + j,
             };
         })
     }).flat(),
+    selectedCell: null
 }
 
 export { initialState };

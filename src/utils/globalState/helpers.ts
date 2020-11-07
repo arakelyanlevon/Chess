@@ -1,35 +1,36 @@
-import { ColorTypes, Figure, FigureTypes } from "../types";
+import { Figure, FigureTypes } from "../types";
+import { getControlledCells, getEnemyColor, getMyColor } from "../helpers";
+
+const getType = (i: number, j: number): FigureTypes => {
+    if((j === 0 || j === 7) && (i === 0 || i === 7)) {
+        return FigureTypes.rook;
+    } else if(
+        (i === 0 && (j === 1 || j === 6)) ||
+        (i === 7 && (j === 1 || j === 6)) 
+    ) {
+        return FigureTypes.knight;
+    } else if(
+        (i === 0 && (j === 2 || j === 5)) ||
+        (i === 7 && (j === 2 || j === 5)) 
+    ) {
+        return FigureTypes.bishop;
+    } else if(j === 3 && (i === 0 || i === 7)) {
+        return FigureTypes.queen;
+    } else if(j === 4 && (i === 0 || i === 7)) {
+        return FigureTypes.king;
+    }
+
+    return FigureTypes.pawn;
+}
 
 export const getFigure = (i: number, j: number): Figure | null => {
     if(i > 1 && i < 6) {
         return null;
     }
-    const figure: Figure = {
-        color: ColorTypes.black,
-        type: FigureTypes.rook
-    }
 
-    if(i === 6 || i === 7) {
-        figure.color = ColorTypes.white;
-    }
+    const color = i === 6 || i === 7 ? getMyColor() : getEnemyColor();
+    const type = getType(i, j);
+    const control = getControlledCells(type, { i, j }) || [];
 
-    if(
-        (i === 0 && (j === 1 || j === 6)) ||
-        (i === 7 && (j === 1 || j === 6)) 
-    ) {
-        figure.type = FigureTypes.knight;
-    } else if(
-        (i === 0 && (j === 2 || j === 5)) ||
-        (i === 7 && (j === 2 || j === 5)) 
-    ) {
-        figure.type = FigureTypes.bishop;
-    } else if(j === 3 && (i === 0 || i === 7)) {
-        figure.type = FigureTypes.queen;
-    } else if(j === 4 && (i === 0 || i === 7)) {
-        figure.type = FigureTypes.king;
-    } else if(i === 1 || i === 6) {
-        figure.type = FigureTypes.pawn;
-    }
-
-    return figure;
+    return { color, type, control };
 }

@@ -31,13 +31,8 @@ export const Board:FC = () => {
                         return <Square
                             key={`${i} ${j}`}
                             isWhite={(i + j) % 2 === 0}
-                            figure={
-                                `${cell?.figure ?
-                                    `${cell.figure?.color}_${cell.figure?.type}` :
-                                    `${constants.figures.none}`
-                                }`
-                            }
                             coords={{ i, j }}
+                            figure={cell?.figure || null}
                         />
                     })}
                 </Row>

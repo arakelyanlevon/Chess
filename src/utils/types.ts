@@ -24,13 +24,13 @@ export type Figure = {
     | FigureTypes.queen
     | FigureTypes.king
     | FigureTypes.pawn,
-    color: ColorTypes.black | ColorTypes.white
+    color: ColorTypes.black | ColorTypes.white,
+    control: Coords[]
 }
 
 export type Cell = {
     coords: Coords,
     color: ColorTypes.black | ColorTypes.white,
-    figure: Figure | null,
-    selected: boolean,
-    index: number
+    figure: Figure | null | undefined,
+    index: number,
 }
