@@ -12,11 +12,13 @@ const Main = styled.div`
     width: ${styles.cell.width * constants.cell.count}px;
     height: ${styles.cell.height * constants.cell.count}px;
     display: flex;
+    flex-wrap: wrap;
     margin: auto;
 `;
 
 const Row = styled.div`
     width: 100%;
+    display: flex;
 `;
 
 export const Board:FC = () => {
@@ -24,9 +26,9 @@ export const Board:FC = () => {
     
     return (
         <Main>
-            {createArray(8).map((_, j: number) => (
-                <Row key={j}>
-                    {createArray(8).map((_, i: number) => {
+            {createArray(8).map((_, i: number) => (
+                <Row key={i}>
+                    {createArray(8).map((_, j: number) => {
                         const cell = state.allCells.find((cell: Cell) => cell.coords.i === i && cell.coords.j === j);
                         return <Square
                             key={`${i} ${j}`}

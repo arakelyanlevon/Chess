@@ -18,14 +18,14 @@ const reducer = (state: StateType, action: Actions): StateType => {
                 return state;
             }
 
-            if(!isSameCoords(action.cell.coords, selectedCell.coords)) {
-                allCells[selectedCell.index || 0].figure = null;
+            if(!isSameCoords(action.cell.coords, selectedCell.coords) && selectedCell.index) {
+                allCells[selectedCell.index].figure = null;
             }
 
             allCells[action.cell.index] = action.cell;
             allCells.forEach((cell: Cell) => {
                 if(cell.figure?.control) {
-                    cell.figure.control = getControlledCells(cell.figure.type, cell.coords)
+                    cell.figure.control = getControlledCells(cell.figure.type, cell.coords, allCells)
                 }
             });
 

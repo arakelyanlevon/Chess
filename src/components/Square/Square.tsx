@@ -18,7 +18,7 @@ import { ContextProps, useGlobalState }from '../../utils/globalState/useGlobalSt
 import { ActionTypes } from '../../utils/globalState/actions';
 import styles from '../../resources/styles';
 import * as helpers from './helpers';
-import { getMyColor, isSameCoords } from '../../utils/helpers';
+import { getCellByCoords, getMyColor, isSameCoords } from '../../utils/helpers';
 
 const figures = {
     black_bishop: blackBishop,
@@ -69,19 +69,18 @@ export const Square:FC<Props> = ({ isWhite, figure, coords }: Props) => {
 
     const takeFigure = (): void => {
         if(figure?.color === getMyColor()) {
-            const currentCell: Cell | null = helpers.getCellByCoords(coords, state.allCells);
-            dispatch({ type: ActionTypes.SELECT_FIGURE, cell: currentCell });
+            const currentCell: Cell | undefined = getCellByCoords(state.allCells, coords);
+            dispatch({ type: ActionTypes.SELECT_FIGURE, cell: currentCell || null});
         }
     }
 
     const setFigure = () => {
-        const cell: Cell | null = helpers.getCellByCoords(coords, state.allCells);
-        if(cell && state.selectedCell && isPossible) {
+        const cell: Cell | undefined = getCellByCoords(state.allCells, coords);
+        if(cell && state.selectedCell && (isPossible  || isSameCoords(coords, state.selectedCell?.coords))) {
             cell.figure = state.selectedCell.figure;
-            dispatch({ type: ActionTypes.SET_FIGURE, cell: cell })
+            dispatch({ type: ActionTypes.SET_FIGURE, cell: cell || null });
         }
     }
-
     return (
         <Main
             className='cell'

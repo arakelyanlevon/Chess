@@ -21,13 +21,3 @@ export const setHeight = (): number => {
     return styles.cell.height - 15;
 };
 
-export const getCellByCoords = (coords: Coords, allCells: Cell[]): Cell | null => {
-    for(let i = 0; i < allCells.length; i++) {
-        const cell = allCells[i];
-        if(isSameCoords(cell.coords, coords)) {
-            return cell;
-        }
-    }
-
-    return null;
-}
