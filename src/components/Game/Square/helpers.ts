@@ -1,7 +1,6 @@
-import styles from '../../resources/styles';
+import styles from '../../../resources/styles';
 
-import { Coords, Cell, FigureTypes } from '../../utils/types';
-import { isSameCoords } from '../../utils/helpers';
+import { FigureTypes } from '../../../utils/types';
 
 export const setWidth = (figureType: FigureTypes): number => {
     if(figureType === FigureTypes.pawn)

@@ -1,24 +1,23 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
 
-import blackBishop from '../../images/figures/black/blackBishop.png';
-import blackKing from '../../images/figures/black/blackKing.png';
-import blackKnight from '../../images/figures/black/blackKnight.png';
-import blackPawn from '../../images/figures/black/blackPawn.png';
-import blackQueen from '../../images/figures/black/blackQueen.png';
-import blackRook from '../../images/figures/black/blackRook.png';
-import whiteBishop from '../../images/figures/white/whiteBishop.png';
-import whiteKing from '../../images/figures/white/whiteKing.png';
-import whiteKnight from '../../images/figures/white/whiteKnight.png';
-import whitePawn from '../../images/figures/white/whitePawn.png';
-import whiteQueen from '../../images/figures/white/whiteQueen.png';
-import whiteRook from '../../images/figures/white/whiteRook.png';
-import { Coords, Cell, Figure } from '../../utils/types';
-import { ContextProps, useGlobalState }from '../../utils/globalState/useGlobalState';
-import { ActionTypes } from '../../utils/globalState/actions';
-import styles from '../../resources/styles';
+import blackBishop from '../../../images/figures/black/blackBishop.png';
+import blackKing from '../../../images/figures/black/blackKing.png';
+import blackKnight from '../../../images/figures/black/blackKnight.png';
+import blackPawn from '../../../images/figures/black/blackPawn.png';
+import blackQueen from '../../../images/figures/black/blackQueen.png';
+import blackRook from '../../../images/figures/black/blackRook.png';
+import whiteBishop from '../../../images/figures/white/whiteBishop.png';
+import whiteKing from '../../../images/figures/white/whiteKing.png';
+import whiteKnight from '../../../images/figures/white/whiteKnight.png';
+import whitePawn from '../../../images/figures/white/whitePawn.png';
+import whiteQueen from '../../../images/figures/white/whiteQueen.png';
+import whiteRook from '../../../images/figures/white/whiteRook.png';
+import { Coords, Cell, Figure } from '../../../utils/types';
+import { ContextProps, useGlobalState } from '../../../utils/globalState/useGlobalState';
+import { ActionTypes } from '../../../utils/globalState/actions';
+import { FigureImg, Main } from './styles';
 import * as helpers from './helpers';
-import { getCellByCoords, getMyColor, isSameCoords } from '../../utils/helpers';
+import { getCellByCoords, getMyColor, isSameCoords } from '../../../utils/helpers';
 
 const figures = {
     black_bishop: blackBishop,
@@ -36,31 +35,13 @@ const figures = {
 };
 
 
-const Main = styled.div`
-    width: ${styles.cell.width}px;
-    height: ${styles.cell.height}px;
-    background-color: ${({theme}) => {
-        if(theme.isPossible) {
-            return styles.cell.colors[theme.isWhite ? 'possibleLight' : 'possibleDark']
-        }
-        return styles.cell.colors[theme.isWhite ? 'light' : 'dark']
-    }};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-
-const FigureImg = styled.img`
-    z-index: 0;
-`;
-
 type Props = {
     isWhite: boolean,
     coords: Coords,
     figure: Figure | null
 }
 
-export const Square:FC<Props> = ({ isWhite, figure, coords }: Props) => {
+export const Square:FC<Props> = ({ isWhite, figure, coords }) => {
     const { state, dispatch }: ContextProps = useGlobalState();
 
     const isPossible: boolean = !!state.selectedCell?.figure?.control.find((controlCoords: Coords) => {
@@ -81,11 +62,13 @@ export const Square:FC<Props> = ({ isWhite, figure, coords }: Props) => {
             dispatch({ type: ActionTypes.SET_FIGURE, cell: cell || null });
         }
     }
+
     return (
         <Main
             className='cell'
-            theme={{isWhite, isPossible}}
+            theme={{ isWhite, isPossible }}
             onClick={() => state.selectedCell ? setFigure() : takeFigure()}
+            key={`cell${coords.i}${coords.j}`}
         >
             {figure &&
                 <FigureImg
@@ -94,6 +77,7 @@ export const Square:FC<Props> = ({ isWhite, figure, coords }: Props) => {
                     alt={`${figure.color} ${figure.type}`}
                     width={helpers.setWidth(figure.type)}
                     height={helpers.setHeight()}
+                    key={`img${coords.i}${coords.j}`}
                 />
             }
         </Main>

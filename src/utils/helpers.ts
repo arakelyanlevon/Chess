@@ -5,11 +5,11 @@ export const createArray = (length: number): number[] => {
 }
 
 export const getMyColor = (): ColorTypes.black | ColorTypes.white => {
-    return ColorTypes.black;
+    return ColorTypes.white;
 }
 
 export const getEnemyColor = (): ColorTypes.black | ColorTypes.white => {
-    return ColorTypes.white;
+    return ColorTypes.black;
 }
 
 export const isSameCoords = (coords1: Coords | null | undefined, coords2: Coords | null | undefined): boolean => {

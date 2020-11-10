@@ -1,5 +1,5 @@
-import { Cell, Coords, Figure, FigureTypes } from "../types";
-import { getControlledCells, getEnemyColor, getMyColor } from "../helpers";
+import { Cell, ColorTypes, Coords, Figure, FigureTypes } from "../types";
+import { getEnemyColor, getMyColor } from "../helpers";
 
 const getType = (i: number, j: number): FigureTypes => {
     if(
@@ -17,10 +17,22 @@ const getType = (i: number, j: number): FigureTypes => {
         (i === 7 && (j === 2 || j === 5)) 
     ) {
         return FigureTypes.bishop;
-    } else if(j === 3 && (i === 0 || i === 7)) {
-        return FigureTypes.queen;
-    } else if(j === 4 && (i === 0 || i === 7)) {
-        return FigureTypes.king;
+    } else {
+        if(i === 0 || i === 7) {
+            if(getMyColor() === ColorTypes.black) {
+                if(j === 3) {
+                    return FigureTypes.king;
+                } else if(j === 4) {
+                    return FigureTypes.queen;
+                }
+            } else {
+                if(j === 4) {
+                    return FigureTypes.king;
+                } else if(j === 3) {
+                    return FigureTypes.queen;
+                }
+            }
+        }
     }
 
     return FigureTypes.pawn;
