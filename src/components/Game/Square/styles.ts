@@ -1,21 +1,6 @@
 import styled from 'styled-components';
 import styles from '../../../resources/styles';
 
-export const Index = styled.div`
-    background-color: #2b2b2b;
-    width: ${({theme}) => {
-        return styles.cell.width / (theme.isWidthLonger ? 1 : 2)
-    }}px;
-    height: ${({theme}) => {
-        return styles.cell.height / (theme.isWidthLonger ? 2 : 1)
-    }}px;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #cecece;
-`;
-
 export const Main = styled.div`
     width: ${styles.cell.width}px;
     height: ${styles.cell.height}px;
@@ -28,14 +13,23 @@ export const Main = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-`;
-
-export const Container = styled.div`
-    display: ${({theme}) => {
-        return theme.isFlex ? 'flex' : '';
-    }}
+    position: relative;
+    &:after {
+        ${({theme}) => theme.isSelected && `
+            content: '';
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            border: 3.5px solid grey;
+            opacity: 0.7;
+            border-radius: 50%;
+            z-index: 0;`
+        }
+    }
 `;
 
 export const FigureImg = styled.img`
-    z-index: 0;
+    z-index: 1;
 `;

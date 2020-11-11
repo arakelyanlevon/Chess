@@ -66,7 +66,7 @@ export const Square:FC<Props> = ({ isWhite, figure, coords }) => {
     return (
         <Main
             className='cell'
-            theme={{ isWhite, isPossible }}
+            theme={{ isWhite, isPossible, isSelected: isSameCoords(state.selectedCell?.coords, coords) }}
             onClick={() => state.selectedCell ? setFigure() : takeFigure()}
             key={`cell${coords.i}${coords.j}`}
         >
