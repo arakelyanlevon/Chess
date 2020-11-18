@@ -15,7 +15,7 @@ export const Board:FC = () => {
             <Row>
                 <ID theme={{ isWidthLonger: false, isHeightLonger: false }}></ID>
                 {createArray(8).map((_, i: number) => (
-                    <ID theme={{ isWidthLonger: true }}>
+                    <ID key={`id1${i}`} theme={{ isWidthLonger: true }}>
                         {getMyColor() === ColorTypes.white ? constants.letters[i] : constants.letters.slice().reverse()[i]}
                     </ID>
                 ))}
@@ -43,7 +43,7 @@ export const Board:FC = () => {
             <Row>
                 <ID theme={{ isWidthLonger: false, isHeightLonger: false }}></ID>
                 {createArray(8).map((_, i: number) => (
-                    <ID theme={{ isWidthLonger: true }}>
+                    <ID  key={`id1${i}`} theme={{ isWidthLonger: true }}>
                         {getMyColor() === ColorTypes.white ? constants.letters[i] : constants.letters.slice().reverse()[i]}
                     </ID>
                 ))}
